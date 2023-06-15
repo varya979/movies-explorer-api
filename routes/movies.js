@@ -1,10 +1,10 @@
 const movieRouter = require('express').Router();
 
-// const {
-//   getMovies,
-//   createMovie,
-//   deleteMovie,
-// } = require('../controllers/movies');
+const {
+  getMovies,
+  createMovie,
+  deleteMovie,
+} = require('../controllers/movies');
 
 // const { createMovieValidation, movieIdValidation } = require('../middlewares/celebrate-validation');
 
@@ -12,8 +12,8 @@ const movieRouter = require('express').Router();
 movieRouter.get('/', getMovies);
 // создаёт фильм с переданными в теле: country, director, duration, year,
 // description, image, trailer, nameRU, nameEN и thumbnail, movieId
-movieRouter.post('/', createMovieValidation, createMovie);
+movieRouter.post('/', /* createMovieValidation,*/ createMovie);
 
-movieRouter.delete('/:_id', movieIdValidation, deleteMovie);
+movieRouter.delete('/:movieId', /* movieIdValidation, */ deleteMovie);
 
 module.exports = movieRouter;
