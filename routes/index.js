@@ -15,3 +15,5 @@ router.use(auth);
 router.use('/users', userRouter);
 router.use('/movies', movieRouter);
 router.use('*', incorrectRouter);
+
+module.exports = router;

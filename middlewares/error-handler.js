@@ -1,4 +1,4 @@
-module.exports = (err, req, res, next) => {
+const error = (err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, message } = err;
   // проверяем статус и выставляем сообщение в зависимости от него
@@ -6,3 +6,5 @@ module.exports = (err, req, res, next) => {
 
   next();
 };
+
+module.exports = error;

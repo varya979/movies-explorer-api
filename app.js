@@ -6,6 +6,7 @@ const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const limiter = require('./middlewares/limiter');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const error = require('./middlewares/error-handler');
@@ -20,10 +21,12 @@ mongoose.connect(mongoAdress, { useNewUrlParser: true });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-// подключаем логгер запросов
-app.use(requestLogger);
 // подключаем helmet для установки заголовков, связанных с безопасностью
 app.use(helmet());
+// подключаем логгер запросов
+app.use(requestLogger);
+// подключаем rate-limiter
+app.use(limiter);
 // подключаем корневой роутер
 app.use(router);
 
