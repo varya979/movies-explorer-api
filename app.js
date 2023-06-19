@@ -2,11 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-// const { errors } = require('celebrate');
+const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const error = require('./middlewares/error-handler');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -27,8 +28,8 @@ app.use(router);
 // подключаем логгер ошибок
 app.use(errorLogger);
 // мидлвэр - обработчик ошибок celebrate
-// app.use(errors());
+app.use(errors());
 // мидлвэр - центральный обработчик ошибок (должен быть в конце всех app.use):
-// app.use(error);
+app.use(error);
 
 app.listen(PORT);

@@ -36,26 +36,26 @@ const userSchema = new mongoose.Schema(
 // добавим метод findUserByCredentials схеме пользователя.
 // у него будет два параметра — почта и пароль
 
-// userSchema.statics.findUserByCredentials = function (email, password) {
-//   // попытаемся найти пользователя по почте
-//   return this.findOne({ email }).select('+password')
-//   // this — это модель User
-//     .then((user) => {
-//       // не нашёлся — отклоняем промис
-//       if (!user) {
-//         return Promise.reject(new UnauthorizedError('Неправильные почта или пароль')); // 401
-//       }
+userSchema.statics.findUserByCredentials = function (email, password) {
+  // попытаемся найти пользователя по почте
+  return this.findOne({ email }).select('+password')
+  // this — это модель User
+    .then((user) => {
+      // не нашёлся — отклоняем промис
+      if (!user) {
+        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль')); // 401
+      }
 
-//       // нашёлся — сравниваем хеши
-//       return bcrypt.compare(password, user.password)
-//         .then((matched) => {
-//           if (!matched) { // отклоняем промис
-//             return Promise.reject(new UnauthorizedError('Неправильные почта или пароль')); // 401
-//           }
+      // нашёлся — сравниваем хеши
+      return bcrypt.compare(password, user.password)
+        .then((matched) => {
+          if (!matched) { // отклоняем промис
+            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль')); // 401
+          }
 
-//           return user; // теперь user доступен
-//         });
-//     });
-// };
+          return user; // теперь user доступен
+        });
+    });
+};
 
 module.exports = mongoose.model('user', userSchema);
