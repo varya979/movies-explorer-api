@@ -3,6 +3,12 @@ const Movie = require('../models/movie');
 const BadRequestError = require('../errors/bad-request-error');
 const NotFoundError = require('../errors/not-found-error');
 const ForbiddenError = require('../errors/forbidden-error');
+const {
+  BadRequestErrorMessage,
+  NotFoundFilmErrorMessage,
+  ForbiddenErrorMessage,
+  FilmRemovedMessage,
+} = require('../constants/constants');
 
 // GET '/movies' - возвращает все сохранённые текущим  пользователем фильмы
 const getMovies = async (req, res, next) => {
@@ -35,7 +41,7 @@ const createMovie = async (req, res, next) => {
     res.status(201).send(movie); // 201
   } catch (err) {
     if (err.name === 'ValidationError') {
-      next(new BadRequestError('Переданы некорректные данные при создании фильма')); // 400
+      next(new BadRequestError(BadRequestErrorMessage)); // 400
     } else {
       next(err); // 500
     }
@@ -46,20 +52,20 @@ const createMovie = async (req, res, next) => {
 const deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     // если база возвращает пустой объект, то код дальше не выполняется, а переходит в catch
-    .orFail(new NotFoundError('Фильм по указанному id не найден')) // 404
+    .orFail(new NotFoundError(NotFoundFilmErrorMessage)) // 404
     .then((movie) => {
       // если поле id пользователя совпадает с полем владельца фильма - фильм удаляем
       if (String(req.user._id) === String(movie.owner)) {
         Movie.findByIdAndRemove(req.params.movieId)
-          .then(() => res.send({ message: 'Фильм удален' }))
+          .then(() => res.send({ message: FilmRemovedMessage }))
           .catch(next);
       } else {
-        throw new ForbiddenError('Нет прав на удаление фильма'); // 403
+        throw new ForbiddenError(ForbiddenErrorMessage); // 403
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при удалении фильма')); // 400
+        next(new BadRequestError(BadRequestErrorMessage)); // 400
       } else {
         next(err); // 500
       }
