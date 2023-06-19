@@ -29,7 +29,6 @@ app.use(requestLogger);
 app.use(limiter);
 // подключаем корневой роутер
 app.use(router);
-
 // подключаем логгер ошибок
 app.use(errorLogger);
 // мидлвэр - обработчик ошибок celebrate

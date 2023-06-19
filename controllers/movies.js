@@ -31,7 +31,7 @@ const createMovie = async (req, res, next) => {
       year: req.body.year,
       description: req.body.description,
       image: req.body.image,
-      trailer: req.body.trailer,
+      trailerLink: req.body.trailerLink,
       nameRU: req.body.nameRU,
       nameEN: req.body.nameEN,
       thumbnail: req.body.thumbnail,

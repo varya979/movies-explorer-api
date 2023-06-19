@@ -24,8 +24,8 @@ const registration = (req, res, next) => {
     .then((hash) => User.create({
       email, password: hash, name, // записываем хэш в базу
     }))
-    .then((user) => res.status(201).send({ // 201
-      name, _id: user._id, email,
+    .then(() => res.status(201).send({ // 201
+      email, name,
     }))
     .catch((err) => {
       if (err.code === 11000) {
@@ -62,7 +62,7 @@ const getMyUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.user._id)
       .orFail(new NotFoundError(NotFoundUserErrorMessage)); // 404
-    res.send(user);
+    res.send({ name: user.name, email: user.email });
   } catch (err) {
     next(err); // 500
   }
@@ -74,13 +74,13 @@ const updateUserProfile = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
-        name: req.body.email,
-        about: req.body.name,
+        email: req.body.email,
+        name: req.body.name,
       },
       { new: true, runValidators: true }, // получим обновлённую и валидную запись
     )
       .orFail(new NotFoundError(NotFoundUserErrorMessage)); // 404
-    res.send(user);
+    res.send({ name: user.name, email: user.email });
   } catch (err) {
     if (err.name === 'ValidationError') {
       next(new BadRequestError(BadRequestErrorMessage)); // 400
